@@ -156,10 +156,32 @@ def try_index_of_coincidence(text, min, max, step):
         for i, char_count in enumerate(char_counts):
             print(f"Character Count for column {i + 1}: {char_count}")
         print("-" * 220) 
+#----------------------------------------------------------
+# dešifruje text pomocou Vigenerovej šifry a zadaného hesla
+#----------------------------------------------------------
+def decrypt_vigenere(text, password):
+    deciphered_text = ''
+    password_length = len(password)
+    password_indices = [ord(char) - ord('A') for char in password]
 
-def main():
+    j = 0
+
+    for char in text:
+        if 'A' <= char <= 'Z':
+            shift = password_indices[j % password_length]
+            deciphered_char = chr(
+                (ord(char) - ord('A') - shift) % 26 + ord('A')
+            )
+            deciphered_text += deciphered_char
+            j += 1
+        else:
+            deciphered_text += char
+
+    return deciphered_text
+
+def run_text1_analysis():
     text = load_text_from_file('1_vigenere_sifra/text1_enc.txt')
-    #try_index_of_coincidence(text, 15, 25, 1)
+    try_index_of_coincidence(text, 15, 25, 1)
     sk_errors, sk_password = get_shift_column_errors(text, 17, 'sk')
     en_errors, en_password = get_shift_column_errors(text, 17, 'en')
     for i in range(17):
@@ -167,8 +189,32 @@ def main():
         
     print(f"SK Password: {sk_password}")
     print(f"EN Password: {en_password}")
+    
+    decrrypted_text = decrypt_vigenere(text, "IDGKZQNOMYNTJOUIB")
+    print(f"Decrypted Text with guessed password: {decrrypted_text}")
+
+def run_text2_analysis():
+    text = load_text_from_file('1_vigenere_sifra/text2_enc.txt')
+    try_index_of_coincidence(text, 15, 25, 1)
+    sk_errors, sk_password = get_shift_column_errors(text, 25, 'sk')
+    en_errors, en_password = get_shift_column_errors(text, 25, 'en')
+    for i in range(17):
+        print(f"Column {i + 1}: SK min error: {sk_errors[i]:.6f}, EN min error: {en_errors[i]:.6f}")
+        
+    print(f"SK Password: {sk_password}")
+    print(f"EN Password: {en_password}")
+    
+    decrrypted_text = decrypt_vigenere(text, "AUZDMZRNFUXQSXHORWQLCLZLS")
+    print(f"Decrypted Text with guessed password: {decrrypted_text}")
+
+def main():    
+    #run_text1_analysis() # heslo IDGKZQNOMYNTJOUIB
+    run_text2_analysis() # heslo AUZDMZRNFUXQSXHORWQLCLZLS
 
 main()
 
 # text 1 - index koincidencie priemerný pre dĺžku hesla 17 okolo 0.06, ostatné jednoznačne horšie
-#        - pri EN jazyku nižšie chyby pri posune na stĺpec
+#        - pri EN jazyku nižšie chyby pri posune na stĺpec, odhadované heslo IDGKZQNOMYNTJOUIB
+
+# text 2 - index koincidencie priemerný pre dĺžku hesla 25 okolo 0.0578, ostatné jednoznačne horšie
+#        - nižšie chyby jednoznačne pri SK jazyku, odhadované heslo: AUZDMZRNFUXQSXHORWQLCLZLS

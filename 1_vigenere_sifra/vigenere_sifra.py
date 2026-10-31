@@ -198,7 +198,7 @@ def run_text2_analysis():
     try_index_of_coincidence(text, 15, 25, 1)
     sk_errors, sk_password = get_shift_column_errors(text, 25, 'sk')
     en_errors, en_password = get_shift_column_errors(text, 25, 'en')
-    for i in range(17):
+    for i in range(25):
         print(f"Column {i + 1}: SK min error: {sk_errors[i]:.6f}, EN min error: {en_errors[i]:.6f}")
         
     print(f"SK Password: {sk_password}")
@@ -206,15 +206,47 @@ def run_text2_analysis():
     
     decrrypted_text = decrypt_vigenere(text, "AUZDMZRNFUXQSXHORWQLCLZLS")
     print(f"Decrypted Text with guessed password: {decrrypted_text}")
+    
+def run_text3_analysis():
+    text = load_text_from_file('1_vigenere_sifra/text3_enc.txt')
+    try_index_of_coincidence(text, 15, 25, 1)
+    sk_errors, sk_password = get_shift_column_errors(text, 15, 'sk')
+    en_errors, en_password = get_shift_column_errors(text, 15, 'en')
+    for i in range(15):
+        print(f"Column {i + 1}: SK min error: {sk_errors[i]:.6f}, EN min error: {en_errors[i]:.6f}")
+        
+    print(f"SK Password: {sk_password}")
+    print(f"EN Password: {en_password}")
+    
+    decrrypted_text = decrypt_vigenere(text, "QWERTYUIOPASDFG")
+    print(f"Decrypted Text with guessed password: {decrrypted_text}")
+    
+def run_text4_analysis():
+    text = load_text_from_file('1_vigenere_sifra/text4_enc.txt')
+    try_index_of_coincidence(text, 15, 25, 1)
+    sk_errors, sk_password = get_shift_column_errors(text, 19, 'sk')
+    en_errors, en_password = get_shift_column_errors(text, 19, 'en')
+    for i in range(19):
+        print(f"Column {i + 1}: SK min error: {sk_errors[i]:.6f}, EN min error: {en_errors[i]:.6f}")
+        
+    print(f"SK Password: {sk_password}")
+    print(f"EN Password: {en_password}")
+    
+    decrrypted_text = decrypt_vigenere(text, "LIYZKFOREGYSDTRQNTK")
+    print(f"Decrypted Text with guessed password: {decrrypted_text}")
 
 def main():    
-    #run_text1_analysis() # heslo IDGKZQNOMYNTJOUIB
+    run_text1_analysis() # heslo IDGKZQNOMYNTJOUIB
     run_text2_analysis() # heslo AUZDMZRNFUXQSXHORWQLCLZLS
+    run_text3_analysis() # heslo QWERTYUIOPASDFG
+    run_text4_analysis() # heslo LIYZKFOREGYSDTRQNTK
 
 main()
-
 # text 1 - index koincidencie priemerný pre dĺžku hesla 17 okolo 0.06, ostatné jednoznačne horšie
 #        - pri EN jazyku nižšie chyby pri posune na stĺpec, odhadované heslo IDGKZQNOMYNTJOUIB
-
 # text 2 - index koincidencie priemerný pre dĺžku hesla 25 okolo 0.0578, ostatné jednoznačne horšie
 #        - nižšie chyby jednoznačne pri SK jazyku, odhadované heslo: AUZDMZRNFUXQSXHORWQLCLZLS
+# text 3 - index koincidencie najlepší pri dĺžke 15, 0.0613, blízko bola aj dĺžka 25 s hodnotou okolo 0.049
+#        - nižšie chyby pri SK jazyku, odhadované heslo: QWERTYUIOPASDFX, bolo treba upraviť posledný znak na G, finálne heslo: QWERTYUIOPASDFG
+# text 4 - index koincidencie jednoznačne najlepší pri dĺžke 19, 0.0594, nižšie chyby (minimá) boli pri SK jazyku
+#        - nižšie chyby (minimá) boli pri SK jazyku, odhadované heslo: LIYZKFOREGYSDTRQNTK
